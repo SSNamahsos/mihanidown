@@ -1,0 +1,48 @@
+{
+  "name": "mihanidown",
+  "version": "0.2.0",
+  "description": "A terminal downloader with a mouse-driven interface: paste a link, see the real thumbnail, pick a quality, keep the file. Works in cmd, PowerShell and any ANSI terminal.",
+  "type": "module",
+  "bin": {
+    "mihanidown": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test src/**/*.test.ts"
+  },
+  "keywords": [
+    "downloader",
+    "yt-dlp",
+    "youtube",
+    "tui",
+    "terminal",
+    "cli",
+    "ink",
+    "archive",
+    "image",
+    "video",
+    "audio"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ink": "^6.0.1",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "react-devtools-core": "^8.0.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

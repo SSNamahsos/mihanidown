@@ -1,0 +1,22 @@
+node_modules/
+dist/
+release/
+*.tsbuildinfo
+.DS_Store
+.env
+.env.*
+
+# downloads from local testing never belong in the repo
+*.part
+*.ytdl
+*.mp4
+*.webm
+*.mkv
+*.m4a
+*.mp3
+*.webp
+
+# local dev notes and private harnesses, not for the public repo
+README_FOR_AI.md
+nsfw_fetch.py
+scripts/thumb-check.ts
