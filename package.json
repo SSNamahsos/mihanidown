@@ -1,6 +1,6 @@
 {
   "name": "mihanidown",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A terminal downloader with a mouse-driven interface: paste a link, see the real thumbnail, pick a quality, keep the file. Works in cmd, PowerShell and any ANSI terminal.",
   "type": "module",
   "bin": {

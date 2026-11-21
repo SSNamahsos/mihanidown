@@ -97,6 +97,10 @@ function collectMedia(html: string, base: string): ScrapedMedia[] {
     const absolute = absolutize(raw.trim(), base)
     if (!absolute || !/^https?:/i.test(absolute)) return
     if (found.has(absolute)) return
+    // Some pages declare og:video pointing at *themselves* — YouTube's watch
+    // page is the canonical case — which would make the picker offer the HTML
+    // as a download. The page is not media; it is where we are already.
+    if (samePage(absolute, base)) return
     found.set(absolute, {
       url: absolute,
       kind,
@@ -178,6 +182,17 @@ function attr(tag: string, name: string): string | undefined {
   const single = new RegExp(`\\b${escaped}\\s*=\\s*'([^']*)'`, 'i').exec(tag)?.[1]
   if (single !== undefined) return single
   return new RegExp(`\\b${escaped}\\s*=\\s*([^\\s>]+)`, 'i').exec(tag)?.[1]
+}
+
+/** True when the candidate is the page we scraped, modulo hash and case. */
+function samePage(candidate: string, base: string): boolean {
+  try {
+    const a = new URL(candidate)
+    const b = new URL(base)
+    return a.protocol === b.protocol && a.host === b.host && a.pathname.replace(/\/$/, '') === b.pathname.replace(/\/$/, '')
+  } catch {
+    return false
+  }
 }
 
 export function absolutize(candidate: string, base: string): string | null {

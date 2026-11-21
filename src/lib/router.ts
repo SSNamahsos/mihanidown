@@ -196,34 +196,40 @@ function describeWarnings(probe: ProbeSuccess): string | undefined {
 /**
  * Scraped media -> choices, so the picker looks the same whichever engine
  * answered. Sizes are unknown until asked for, so probe the first handful in
- * parallel and let the sheet print real numbers instead of guesses.
+ * parallel and let the sheet print real numbers instead of guesses. An item
+ * whose probe turns out to be a web page — not a file — is dropped here, so a
+ * stray meta tag can never offer "download this html".
  */
 export async function scrapedChoices(media: ScrapedMedia[], limit = 12): Promise<Choice[]> {
   const head = media.slice(0, limit)
-  const sizes = await Promise.all(
+  const probed = await Promise.all(
     head.map(async item => {
       try {
-        const probed = await probeRemote(item.url)
-        return probed.ok ? probed.remote.contentLength : undefined
+        const result = await probeRemote(item.url)
+        return {item, result}
       } catch {
-        return undefined
+        return {item, result: null}
       }
     }),
   )
 
-  return head.map((item, index) => {
-    const ext = (extensionFor(item.mime, item.url) ?? 'bin').slice(0, 8)
-    const size = sizes[index]
-    return {
+  const rows: Choice[] = []
+  for (const {item, result} of probed) {
+    if (!result?.ok) continue
+    const mime = result.remote.contentType
+    if (mime?.toLowerCase().includes('html')) continue
+    const ext = (extensionFor(item.mime, item.url) ?? extensionFor(mime, item.url) ?? 'bin').slice(0, 8)
+    rows.push({
       kind: item.kind,
       label: item.label === 'link' ? `${ext} \u00b7 linked from the page` : `${ext} \u00b7 ${item.label}`,
-      detail: [ext, item.kind.slice(0, 8), formatBytes(size)],
+      detail: [ext, item.kind.slice(0, 8), formatBytes(result.remote.contentLength)],
       args: ['-f', 'best'],
-      estimate: size,
+      estimate: result.remote.contentLength,
       /** headless mode needs the original url for a scraped row */
       sourceUrl: item.url,
-    }
-  })
+    })
+  }
+  return rows
 }
 
 export {buildDirectChoice, groupByKind}
