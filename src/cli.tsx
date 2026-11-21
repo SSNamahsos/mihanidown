@@ -13,8 +13,14 @@ import {loadConfig, saveConfig} from './lib/config.js'
 import {diagnose} from './lib/errors.js'
 import {extensionFor, formatBytes, formatEta, formatSpeed, safeFilename} from './lib/format.js'
 import type {ThemeName} from './theme.js'
+import pkg from '../package.json'
 
-const VERSION = '0.2.0'
+/**
+ * One version, stated once: package.json carries it, the binary prints it,
+ * and release tags follow it. Copying the number into a second constant is
+ * how a binary ends up answering --version with last release's name.
+ */
+const VERSION = pkg.version
 
 /* ------------------------------------------------------------------ *
  * Alternate screen + cursor + pointer
