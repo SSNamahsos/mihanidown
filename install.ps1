@@ -11,15 +11,21 @@
 
 $ErrorActionPreference = 'Stop'
 
-$url = 'https://github.com/SSNamahsos/mihanidown/releases/latest/download/mihanidown-windows-x64.exe'
+$url = 'https://github.com/SSNamahsos/mihanidown/releases/latest/download/mihanidown-windows-x64.zip'
 $dir = Join-Path $env:LOCALAPPDATA 'Programs\mihanidown'
 $exe = Join-Path $dir 'mihanidown.exe'
 
 Write-Host "Downloading mihanidown from $url ..."
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
-Invoke-WebRequest -Uri $url -OutFile $exe -UseBasicParsing
+$zip = Join-Path $dir 'mihanidown.zip'
+Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing
+Expand-Archive -Path $zip -DestinationPath $dir -Force
+Remove-Item $zip -Force
+# the zip carries the long release name; normalise it to mihanidown.exe
+$inner = Get-ChildItem $dir -Filter 'mihanidown-windows-x64.exe' | Select-Object -First 1
+if ($inner) { Move-Item $inner.FullName $exe -Force }
 
-Write-Host "Saved to $exe"
+Write-Host "Installed to $exe"
 
 # Add to the user PATH if it is not there already.
 $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')

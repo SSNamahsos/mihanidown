@@ -34,9 +34,10 @@ jobs:
 
       # Raw binaries on a release lose their executable bit, so the unix
       # targets ship as tarballs and the Windows exe ships as-is.
-      - name: Package unix targets
+      - name: Package targets
         run: |
           cd dist-bin
+          zip -9 mihanidown-windows-x64.zip mihanidown-windows-x64.exe
           tar -czf mihanidown-linux-x64.tar.gz mihanidown-linux-x64
           tar -czf mihanidown-linux-arm64.tar.gz mihanidown-linux-arm64
           tar -czf mihanidown-macos-x64.tar.gz mihanidown-macos-x64
@@ -47,7 +48,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist-bin/mihanidown-windows-x64.exe
+            dist-bin/mihanidown-windows-x64.zip
             dist-bin/mihanidown-linux-x64.tar.gz
             dist-bin/mihanidown-linux-arm64.tar.gz
             dist-bin/mihanidown-macos-x64.tar.gz

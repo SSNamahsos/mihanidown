@@ -115,7 +115,9 @@ export default function App({cliTheme, cliUrl, cliOutDir, cliCookies, cliFront}:
       const config = await loadConfig()
       if (cancelled) return
 
-      const outDir = cliOutDir ?? config.outDir ?? defaultOutDir()
+      // Where files land is where the terminal was opened; only -o moves it
+      // before the user does. Never persisted, never remembered.
+      const outDir = cliOutDir ?? defaultOutDir()
       const cookies = cliCookies ?? config.cookies
       patch({
         outDir,
@@ -148,7 +150,7 @@ export default function App({cliTheme, cliUrl, cliOutDir, cliCookies, cliFront}:
       }
 
       if (cancelled) return
-      await saveConfig({outDir, cookies, theme: cliTheme, ...(cliFront ? {front: cliFront} : {})})
+      await saveConfig({cookies, theme: cliTheme, ...(cliFront ? {front: cliFront} : {})})
       patch({
         phase: 'home',
         boot: 'ready',
@@ -564,8 +566,12 @@ export default function App({cliTheme, cliUrl, cliOutDir, cliCookies, cliFront}:
      */
     if (input.length > 1 && /^\[[\x20-\x3f]*[A-Za-z~]$/.test(input)) return
 
-    /* ---- the shortcut sheet, available from anywhere ---- */
-    if (input === '?' || (key.ctrl && input === 'h')) {
+    /* ---- the shortcut sheet, available from anywhere ---- *
+     *
+     * `?` is a real character in a url — every YouTube link contains one — so
+     * while there is text in the field it types instead of toggling. ^h opens
+     * the sheet in every case, including mid-typing. */
+    if ((key.ctrl && input === 'h') || (input === '?' && (current.phase !== 'home' || current.url.length === 0))) {
       patch({helpMenu: !current.helpMenu})
       return
     }
@@ -597,7 +603,6 @@ export default function App({cliTheme, cliUrl, cliOutDir, cliCookies, cliFront}:
             // The notice is drawn flush right, so it carries the short label —
             // the full path is already on the intake screen under `save to`.
             patch({saveMenu: false, outDir: dir, notice: {text: `saving to ${chosen.label}`, intent: 'good'}})
-            void saveConfig({outDir: dir})
           })
         }
       }
@@ -1034,7 +1039,6 @@ export default function App({cliTheme, cliUrl, cliOutDir, cliCookies, cliFront}:
         patch({saveCursor: index})
         void prepare(chosen.dir).then(dir => {
           patch({saveMenu: false, outDir: dir, notice: {text: `saving to ${chosen.label}`, intent: 'good'}})
-          void saveConfig({outDir: dir})
         })
         return
       }

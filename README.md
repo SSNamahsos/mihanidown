@@ -46,7 +46,7 @@ Works in cmd, PowerShell and Windows Terminal.
 
 | | |
 |---|---|
-| **Windows** | [mihanidown-windows-x64.exe](https://github.com/SSNamahsos/mihanidown/releases/latest/download/mihanidown-windows-x64.exe) |
+| **Windows** | [mihanidown-windows-x64.zip](https://github.com/SSNamahsos/mihanidown/releases/latest/download/mihanidown-windows-x64.zip) (extract → `mihanidown.exe`) |
 | Linux x64 | [mihanidown-linux-x64.tar.gz](https://github.com/SSNamahsos/mihanidown/releases/latest/download/mihanidown-linux-x64.tar.gz) |
 | Linux arm64 | [mihanidown-linux-arm64.tar.gz](https://github.com/SSNamahsos/mihanidown/releases/latest/download/mihanidown-linux-arm64.tar.gz) |
 
@@ -67,8 +67,8 @@ mihanidown
 
 ### Windows, the manual way
 
-1. Download [mihanidown-windows-x64.exe](https://github.com/SSNamahsos/mihanidown/releases/latest/download/mihanidown-windows-x64.exe).
-2. Put it somewhere (say `C:\Tools`), rename it to `mihanidown.exe` if you like.
+1. Download [mihanidown-windows-x64.zip](https://github.com/SSNamahsos/mihanidown/releases/latest/download/mihanidown-windows-x64.zip) and extract it.
+2. Put `mihanidown.exe` somewhere (say `C:\Tools`).
 3. Run it by full path, or add its folder to your PATH. Double-clicking also
    works — it opens its own console window.
 

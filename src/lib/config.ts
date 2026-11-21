@@ -6,7 +6,11 @@ import type {FrontMode} from './front.js'
 
 export type Config = {
   theme: ThemeName
-  outDir?: string
+  /**
+   * Deliberately absent: the output folder. Where files land is where the
+   * terminal was opened, every session; only -o or the in-app picker moves
+   * it, and neither is remembered.
+   */
   /** Browser name for `--cookies-from-browser`. */
   cookies?: string
   /** Preferred yt-dlp player client, or "auto" to rotate. */

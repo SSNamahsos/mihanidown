@@ -85,10 +85,14 @@ async function main(): Promise<void> {
 
   const config = await loadConfig()
   const theme: ThemeName = options.theme ?? config.theme ?? 'auto'
-  const outDir = options.outDir ?? config.outDir ?? defaultOutDir()
+  // The save folder is where the terminal was opened, every session. -o wins
+  // for this run; the picker changes it for this session only. It is
+  // deliberately not persisted: "save where I am" is the contract, and a
+  // folder remembered from yesterday would quietly break it.
+  const outDir = options.outDir ?? defaultOutDir()
   const cookies = options.cookies ?? config.cookies
 
-  await saveConfig({outDir, cookies, theme, ...(options.front ? {front: options.front} : {})})
+  await saveConfig({cookies, theme, ...(options.front ? {front: options.front} : {})})
 
   // A url plus a flag means do the whole thing without opening the sheet, so
   // mihanidown drops into a shell pipeline.
